@@ -1,0 +1,89 @@
+ create table student(roll_no int ,name varchar,couse text,primary ke(roll_no));
+CREATE TABLE
+postgres=# insert into student values(101,'Ajay','Java');
+INSERT 0 1
+postgres=# insert into student values(102,'Rajeev','Python');
+INSERT 0 1
+postgres=# insert into student values(103,'Sam','C++'),(104,'Kunal','C');
+INSERT 0 2
+postgres=# select * from student;
+ roll_no |  name  | couse  
+---------+--------+--------
+     101 | Ajay   | Java
+     102 | Rajeev | Python
+     103 | Sam    | C++
+     104 | Kunal  | C
+(4 rows)
+
+postgres=# update student set name='Mohan' where roll_no=103;
+UPDATE 1
+postgres=# delete from student where roll_no=104;
+DELETE 1
+postgres=# select * from student;
+ roll_no |  name  | couse  
+---------+--------+--------
+     101 | Ajay   | Java
+     102 | Rajeev | Python
+     103 | Mohan  | C++
+(3 rows)
+postgres=# delete from student;
+DELETE 3
+postgres=# drop table student;
+DROP TABLE
+postgres=# select * from student;
+ERROR:  relation "student" does not exist
+
+postgres=# create table courses(cid int,cname varchar,primary key(cid));
+CREATE TABLE
+ostgres=# insert into courses values(101,'Python'),(102,'Java'),(103,'C'),(104,'PHP');
+INSERT 0 4
+postgres=# select * from courses;
+ cid | cname  
+-----+--------
+ 101 | Python
+ 102 | Java
+ 103 | C
+ 104 | PHP
+(4 rows)
+
+postgres=# drop table student;
+DROP TABLE
+postgres=# create table student(rollno int,name varchar,cid int,primary key(rollno),constraint fk_cid foreign key(cid) references courses(cid));
+CREATE TABLE
+postgres=# insert into student values(1,'Pushpak',101),(2,'Veera',102),(3,'Bilal',103);
+INSERT 0 3
+postgres=# insert into student values(4,'Raja',103),(4,'OM',104),(5,'Sam',101);
+postgres=# insert into student values(4,'Raja',103),(5,'OM',104),(6,'Sam',101);
+INSERT 0 3
+postgres=# select * from student;
+ rollno |  name   | cid 
+--------+---------+-----
+      1 | Pushpak | 101
+      2 | Veera   | 102
+      3 | Bilal   | 103
+      4 | Raja    | 103
+      5 | OM      | 104
+      6 | Sam     | 101
+(6 rows)
+
+postgres=# select name from student where cid in (select cid from courses where cname='Python');
+  name   
+---------
+ Pushpak
+ Sam
+(2 rows)
+
+postgres=# select name from student where cid in (select cid from courses where cname='Java');
+ name  
+-------
+ Veera
+(1 row)
+
+postgres=# select name from student where cid in (select cid from courses where cname='C');
+ name  
+-------
+ Bilal
+ Raja
+(2 rows)
+
+postgres=# 
